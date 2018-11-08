@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 彩色日志依赖的渲染类 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex"
+                    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx"
+                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+    <!-- 彩色日志格式 -->
+    <property name="COLOR_PATTERN"
+              value="${COLOR_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <!-- 文件输出格式 -->
+    <property name="PATTERN"
+              value="%-12(%d{yyyy-MM-dd HH:mm:ss.SSS}) %-5level [%thread]{faint} %c{faint} : %msg%n"/>
+
+    <!-- 开发环境,测试环境 -->
+    <springProfile name="dev,test">
+        <appender name="CONSOLE"
+                  class="ch.qos.logback.core.ConsoleAppender">
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${COLOR_PATTERN}</pattern>
+            </layout>
+        </appender>
+        <root level="info">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <!-- 测试环境 -->
+    <springProfile name="test">
+        <appender name="FILE_INFO"
+                  class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <rollingPolicy
+                    class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>c:/log/demo/%d{yyyy-MM-dd}/info.log
+                </fileNamePattern>
+                <MaxHistory>30</MaxHistory>
+            </rollingPolicy>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>info</level>
+                <onMatch>ACCEPT</onMatch>
+                <onMismatch>DENY</onMismatch>
+            </filter>
+            <encoder>
+                <charset>UTF-8</charset>
+                <pattern>${PATTERN}</pattern>
+            </encoder>
+        </appender>
+        <appender name="FILE_ERROR"
+                  class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <rollingPolicy
+                    class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>c:/log/demo/%d{yyyy-MM-dd}/error.log
+                </fileNamePattern>
+                <MaxHistory>30</MaxHistory>
+            </rollingPolicy>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>error</level>
+                <onMatch>ACCEPT</onMatch>
+                <onMismatch>DENY</onMismatch>
+            </filter>
+            <encoder>
+                <charset>UTF-8</charset>
+                <pattern>${PATTERN}</pattern>
+            </encoder>
+        </appender>
+        <root level="info">
+            <appender-ref ref="FILE_INFO"/>
+            <appender-ref ref="FILE_ERROR"/>
+        </root>
+    </springProfile>
+
+    <!-- 正式环境 -->
+    <springProfile name="prd">
+        <appender name="FILE_INFO"
+                  class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <rollingPolicy
+                    class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>/home/log/demo/%d{yyyy-MM-dd}/info.log
+                </fileNamePattern>
+                <MaxHistory>30</MaxHistory>
+            </rollingPolicy>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>info</level>
+                <onMatch>ACCEPT</onMatch>
+                <onMismatch>DENY</onMismatch>
+            </filter>
+            <encoder>
+                <charset>UTF-8</charset>
+                <pattern>${PATTERN}</pattern>
+            </encoder>
+        </appender>
+        <appender name="FILE_ERROR"
+                  class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <rollingPolicy
+                    class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>/home/log/demo/%d{yyyy-MM-dd}/error.log
+                </fileNamePattern>
+                <MaxHistory>30</MaxHistory>
+            </rollingPolicy>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>error</level>
+                <onMatch>ACCEPT</onMatch>
+                <onMismatch>DENY</onMismatch>
+            </filter>
+            <encoder>
+                <charset>UTF-8</charset>
+                <pattern>${PATTERN}</pattern>
+            </encoder>
+        </appender>
+        <root level="info">
+            <appender-ref ref="FILE_INFO"/>
+            <appender-ref ref="FILE_ERROR"/>
+        </root>
+    </springProfile>
+</configuration>
